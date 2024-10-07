@@ -1,0 +1,10 @@
+^C:\USERS\AAYUSHBHAVSAR\CSC296P\A1\A1\BUILD\CMAKEFILES\DEBCA2B19AF3B87900DC16B574A2E050\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/aayushbhavsar/csc296P/A1/A1/source -BC:/Users/aayushbhavsar/csc296P/A1/A1/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/aayushbhavsar/csc296P/A1/A1/build/a1.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

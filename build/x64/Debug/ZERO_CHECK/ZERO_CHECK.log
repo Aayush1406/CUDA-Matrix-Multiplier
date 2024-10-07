@@ -1,0 +1,9 @@
+﻿  Checking Build System
+  CMake is re-running because C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/generate.stamp is out-of-date.
+    the file 'C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/TiledMatrixMultiplication_Template.dir/TiledMatrixMultiplication/TiledMatrixMultiplication_Template_generated_template.cu.obj.depend'
+    is newer than 'C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/generate.stamp.depend'
+    result='-1'
+  -- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19045.
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: C:/Users/aayushbhavsar/csc296P/A1/A1/build

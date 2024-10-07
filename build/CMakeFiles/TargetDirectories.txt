@@ -1,0 +1,6 @@
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/VectorAdd_Template.dir
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/wb.dir
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/BasicMatrixMultiplication_Template.dir
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/TiledMatrixMultiplication_Template.dir
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/aayushbhavsar/csc296P/A1/A1/build/CMakeFiles/ZERO_CHECK.dir
