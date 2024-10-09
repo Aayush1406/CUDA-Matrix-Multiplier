@@ -31,13 +31,30 @@ __global__ void matrixMultiplyShared(float* A, float* B, float* C, int numARows,
 
     float pvalue = 0;
     
-    for (int p = 0; p < numAColumns / TILE_WIDTH; p++) { // Will run 128 times
+    for (int p = 0; p < (numAColumns -1 )/ TILE_WIDTH + 1; p++) { // Will run 128 times
 
-        ds_A[ty][tx] =  A[row * numAColumns + p*TILE_WIDTH+tx];
-        ds_B[ty][tx] =  B[(p*TILE_WIDTH+ty) * numBColumns + col];
-        
+        if (row < numARows && p * TILE_WIDTH + tx < numAColumns) {
+
+            ds_A[ty][tx] = A[row * numAColumns + p * TILE_WIDTH + tx];
+        }
+        else {
+            ds_A[ty][tx] = 0.0;
+
+        }
+
+
+        if (col < numBColumns && p * TILE_WIDTH + ty < numAColumns) {
+
+           ds_B[ty][tx] = B[(p * TILE_WIDTH + ty) * numBColumns + col];
+
+        }
+        else {
+
+            ds_B[ty][tx] = 0.0;
+
+        }
+
         __syncthreads();
-
         for (int i = 0; i < TILE_WIDTH; i++) {
 
         pvalue = pvalue + ds_A[ty][i] * ds_B[i][tx];
@@ -47,22 +64,59 @@ __global__ void matrixMultiplyShared(float* A, float* B, float* C, int numARows,
 
     }
 
-    C[row * numARows + col] = pvalue;
+    if (row < numARows && col < numBColumns) {
+
+        C[row * numBColumns + col] = pvalue;
+
+    }
 }
 
+//__global__ void matrixMultiplyShared(float* A, float* B, float* C,
+//    int numARows, int numAColumns,
+//    int numBColumns) {
+//    //@@ Insert code to implement tiled matrix multiplication here
+//    //@@ You have to use shared memory to write this kernel
+//    __shared__ float Ashared[TILE_WIDTH][TILE_WIDTH];
+//    __shared__ float Bshared[TILE_WIDTH][TILE_WIDTH];
+//
+//    int bx = blockIdx.x;
+//    int by = blockIdx.y;
+//    int tx = threadIdx.x;
+//    int ty = threadIdx.y;
+//
+//    int Row = (by * blockDim.y) + ty;
+//    int Col = (bx * blockDim.x) + tx;
+//
 //    float Pvalue = 0;
-//    // Loop over the M and N tiles required to compute the P element
-//    for (int p = 0; p < Width / TILE_WIDTH; ++p) {
-//        // Collaborative loading of M and N tiles into shared memory
-//        ds_M[ty][tx] = M[Row * Width + p * TILE_WIDTH + tx];
-//        ds_N[ty][tx] = N[(p * TILE_WIDTH + ty) * Width + Col];
+//
+//    for (int p = 0; p < (numAColumns - 1) / TILE_WIDTH + 1; p++) {
+//        if (Row < numARows && p * TILE_WIDTH + tx < numAColumns) {
+//            Ashared[ty][tx] = A[Row * numAColumns + (p * TILE_WIDTH + tx)];
+//        }
+//        else {
+//            Ashared[ty][tx] = 0.0;
+//        }
+//        if (p * TILE_WIDTH + ty < numAColumns && Col < numBColumns) {
+//            Bshared[ty][tx] = B[(p * TILE_WIDTH + ty) * numBColumns + Col];
+//        }
+//        else {
+//            Bshared[ty][tx] = 0.0;
+//        }
 //        __syncthreads();
-//        for (int i = 0; i < TILE_WIDTH; ++i)Pvalue += ds_M[ty][i] * ds_N[i][tx];
-//        __synchthreads();
+//
+//        for (int i = 0; i < TILE_WIDTH; i++) {
+//            Pvalue += Ashared[ty][i] * Bshared[i][tx];
+//        }
+//        __syncthreads();
+//
+//
 //    }
-//    P[Row * Width + Col] = Pvalue;
-//}
 
+//if (Row < numARows && Col < numBColumns) {
+//    C[Row * numBColumns + Col] = Pvalue;
+//}
+//
+//}
 
 int main(int argc, char** argv) {
     wbArg_t args;
@@ -116,9 +170,10 @@ int main(int argc, char** argv) {
     wbTime_stop(GPU, "Copying input memory to the GPU.");
 
     //@@ Initialize the grid and block dimensions here
-    dim3 dimBlock(TILE_WIDTH, TILE_WIDTH);
-    dim3 dimGrid((numCColumns + TILE_WIDTH - 1) / TILE_WIDTH, (numCRows + TILE_WIDTH - 1) / TILE_WIDTH);
-
+    //dim3 dimBlock(TILE_WIDTH, TILE_WIDTH);
+    //dim3 dimGrid((numCColumns + TILE_WIDTH - 1) / TILE_WIDTH, (numCRows + TILE_WIDTH - 1) / TILE_WIDTH);
+    dim3 dimGrid((numCColumns - 1) / TILE_WIDTH + 1, (numCRows - 1) / TILE_WIDTH + 1, 1);
+    dim3 dimBlock(TILE_WIDTH, TILE_WIDTH, 1);
 
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Launch the GPU Kernel here

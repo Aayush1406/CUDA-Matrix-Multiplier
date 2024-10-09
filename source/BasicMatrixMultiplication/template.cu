@@ -22,13 +22,16 @@ __global__ void matrixMultiply(float* A, float* B, float* C, int numARows, int n
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Column = blockIdx.x * blockDim.x + threadIdx.x;
 
-    float Cvalue = 0;
-    // Each thread computes one element of the block sub-matrix
-    for (int k = 0; k < numAColumns; ++k) {
-        Cvalue += A[Row * numAColumns + k] * B[k * numBColumns + Column];
-    }
-    C[Row * numBColumns + Column] = Cvalue;
+    if (Row < numARows && Column < numBColumns) {
+        float Cvalue = 0;
+        // Each thread computes one element of the block sub-matrix
+        for (int k = 0; k < numAColumns; ++k) {
+            Cvalue += A[Row * numAColumns + k] * B[k * numBColumns + Column];
+        }
+        C[Row * numBColumns + Column] = Cvalue;
 
+    }
+    
 }
 
 
@@ -84,8 +87,11 @@ int main(int argc, char** argv) {
 
     //@@ Initialize the grid and block dimensions here
 
-    dim3 gridDim(numCColumns / TILE_WIDTH, numCRows / TILE_WIDTH, 1);
+    dim3 gridDim((numCColumns -1 )/ TILE_WIDTH + 1, (numCRows-1) / TILE_WIDTH + 1, 1);
     dim3 blockDim(TILE_WIDTH, TILE_WIDTH, 1);
+
+
+
     //matrixMultiply << <gridDim, blockDim, 1 >> > (deviceA, deviceB, deviceC, );
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Launch the GPU Kernel here
