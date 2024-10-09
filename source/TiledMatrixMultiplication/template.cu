@@ -71,52 +71,6 @@ __global__ void matrixMultiplyShared(float* A, float* B, float* C, int numARows,
     }
 }
 
-//__global__ void matrixMultiplyShared(float* A, float* B, float* C,
-//    int numARows, int numAColumns,
-//    int numBColumns) {
-//    //@@ Insert code to implement tiled matrix multiplication here
-//    //@@ You have to use shared memory to write this kernel
-//    __shared__ float Ashared[TILE_WIDTH][TILE_WIDTH];
-//    __shared__ float Bshared[TILE_WIDTH][TILE_WIDTH];
-//
-//    int bx = blockIdx.x;
-//    int by = blockIdx.y;
-//    int tx = threadIdx.x;
-//    int ty = threadIdx.y;
-//
-//    int Row = (by * blockDim.y) + ty;
-//    int Col = (bx * blockDim.x) + tx;
-//
-//    float Pvalue = 0;
-//
-//    for (int p = 0; p < (numAColumns - 1) / TILE_WIDTH + 1; p++) {
-//        if (Row < numARows && p * TILE_WIDTH + tx < numAColumns) {
-//            Ashared[ty][tx] = A[Row * numAColumns + (p * TILE_WIDTH + tx)];
-//        }
-//        else {
-//            Ashared[ty][tx] = 0.0;
-//        }
-//        if (p * TILE_WIDTH + ty < numAColumns && Col < numBColumns) {
-//            Bshared[ty][tx] = B[(p * TILE_WIDTH + ty) * numBColumns + Col];
-//        }
-//        else {
-//            Bshared[ty][tx] = 0.0;
-//        }
-//        __syncthreads();
-//
-//        for (int i = 0; i < TILE_WIDTH; i++) {
-//            Pvalue += Ashared[ty][i] * Bshared[i][tx];
-//        }
-//        __syncthreads();
-//
-//
-//    }
-
-//if (Row < numARows && Col < numBColumns) {
-//    C[Row * numBColumns + Col] = Pvalue;
-//}
-//
-//}
 
 int main(int argc, char** argv) {
     wbArg_t args;
