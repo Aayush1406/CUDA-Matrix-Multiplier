@@ -59,9 +59,9 @@ __global__ void matrixMultiplyShared(float* A, float* B, float* C, int numARows,
 
         pvalue = pvalue + ds_A[ty][i] * ds_B[i][tx];
 
-        __syncthreads();
+        
         }
-
+		__syncthreads();
     }
 
     if (row < numARows && col < numBColumns) {
