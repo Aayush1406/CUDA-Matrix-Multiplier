@@ -25,13 +25,12 @@ __global__ void matrixMultiply(float* A, float* B, float* C, int numARows, int n
     if (Row < numARows && Column < numBColumns) {
         float Cvalue = 0;
         // Each thread computes one element of the block sub-matrix
+        // Each thread will run a for loop to compute final output for that particular index [i][j] ! 
         for (int k = 0; k < numAColumns; ++k) {
             Cvalue += A[Row * numAColumns + k] * B[k * numBColumns + Column];
         }
         C[Row * numBColumns + Column] = Cvalue;
-
-    }
-    
+    }    
 }
 
 
