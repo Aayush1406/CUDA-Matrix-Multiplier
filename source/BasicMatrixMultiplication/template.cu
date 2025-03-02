@@ -28,7 +28,7 @@ __global__ void matrixMultiply(float* A, float* B, float* C, int numARows, int n
         //stored in threads personal register.
         float Cvalue = 0;
        
-        // Each thread will run a for loop to compute final output for that particular index [i][j] ! 
+// Each thread will run a for loop to compute final output for that particular index [i][j] ! This is a sequential accumulation.
         for (int k = 0; k < numAColumns; ++k) {
             Cvalue += A[Row * numAColumns + k] * B[k * numBColumns + Column];
         }
