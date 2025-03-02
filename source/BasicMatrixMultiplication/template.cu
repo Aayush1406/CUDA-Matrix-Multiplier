@@ -16,15 +16,18 @@ using namespace std;
   } while (0)
 
 // Compute C = A * B
+// Kernel executed by threads. (Total threads that will execute this will be P_row * P_col)
 __global__ void matrixMultiply(float* A, float* B, float* C, int numARows, int numAColumns, int numBColumns) {
-    //@@ Insert code to implement basic matrix multiplication here
-    //@@ Do not use shared memory to write this kernel
+    
+    
     int Row = blockIdx.y * blockDim.y + threadIdx.y;
     int Column = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (Row < numARows && Column < numBColumns) {
+       
+        //stored in threads personal register.
         float Cvalue = 0;
-        // Each thread computes one element of the block sub-matrix
+       
         // Each thread will run a for loop to compute final output for that particular index [i][j] ! 
         for (int k = 0; k < numAColumns; ++k) {
             Cvalue += A[Row * numAColumns + k] * B[k * numBColumns + Column];
